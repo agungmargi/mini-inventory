@@ -190,8 +190,8 @@ while true; do
     echo $HEAD
     echo "Selamat datang di mini inventory"
     echo "$HEAD"
-    echo "1. Tambah Barang"
-    echo "2. Lihat Barang"
+    echo "1. Tambah Data Barang"
+    echo "2. Lihat Data Barang"
     echo "3. Update Stock Barang"
     echo "4. Hapus Barang"
     echo "5. Keluar"
