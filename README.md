@@ -12,7 +12,7 @@ Sebuah aplikasi inventory sederhana yang dibuat menggunakan bahasa pemrograman b
 ## Cara Install
 1. Clone project ini
 ```bash
-https://github.com/agungmargi/mini-inventory.git
+https://github.com/agungmargi/project-app-cli-scripting-os-agung_margiyono
 ```
 
 ## Cara Penggunaan
