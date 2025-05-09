@@ -79,6 +79,83 @@ add_item() {
     read -p "Tekan enter untuk kembali ke menu"
 }
 
+#mengupdate item
+update_item() {
+    clear
+    echo -e "${YELLOW}${HEAD}${NOCOLOR}"
+    echo -e "${BLUE}       Update Stock Barang${NOCOLOR}"
+    echo -e "${YELLOW}${HEAD}${NOCOLOR}"
+
+    read -p "Masukkan nama barang yang ingin diupdate: " nama
+
+    # Cari data barang
+    if ! grep -q "^$nama" "$FOLDER/$FILE"; then
+        echo -e "${RED}Barang tidak ditemukan!${NOCOLOR}"
+        read -p "Tekan enter untuk kembali..."
+        return
+    fi
+
+    echo -e "${YELLOW}Pilih jenis update:${NOCOLOR}"
+    echo "1. Barang Masuk"
+    echo "2. Barang Keluar"
+    echo "3. Kembali"
+    read -p "Pilih opsi: " opsi
+
+    case $opsi in
+        1)
+            read -p "Masukkan jumlah barang masuk: " tambah
+            if ! [[ "$tambah" =~ ^[0-9]+$ ]]; then
+                echo -e "${RED}Jumlah harus angka!${NOCOLOR}"
+                read -p "Tekan enter untuk kembali..."
+                return
+            fi
+            # Update data
+            awk -F'|' -v name="$nama" -v add="$tambah" -v OFS='|' '
+            $1 ~ name {
+                $2 += add
+            } {print $1, $2}
+            ' "$FOLDER/$FILE" > tmpfile && mv tmpfile "$FOLDER/$FILE"
+            echo -e "${GREEN}Stok berhasil ditambahkan${NOCOLOR}"
+            ;;
+        2)
+            read -p "Masukkan jumlah barang keluar: " kurang
+            if ! [[ "$kurang" =~ ^[0-9]+$ ]]; then
+                echo -e "${RED}Jumlah harus angka!${NOCOLOR}"
+                read -p "Tekan enter untuk kembali..."
+                return
+            fi
+            # Kurangi jika cukup stok
+            awk -F'|' -v name="$nama" -v min="$kurang" -v OFS='|' '
+            $1 ~ name {
+                if ($2 >= min) {
+                    $2 -= min
+                } else {
+                    print "ERROR" > "/dev/stderr"
+                    exit 1
+                }
+            } {print $1, $2}
+            ' "$FOLDER/$FILE" > tmpfile
+            if [[ $? -eq 0 ]]; then
+                mv tmpfile "$FOLDER/$FILE"
+                echo -e "${GREEN}Stok berhasil dikurangi${NOCOLOR}"
+            else
+                echo -e "${RED}Stok tidak cukup!${NOCOLOR}"
+                rm -f tmpfile
+            fi
+            ;;
+        3)
+            return
+            ;;
+        *)
+            echo -e "${RED}Opsi tidak valid!${NOCOLOR}"
+            ;;
+    esac
+
+    read -p "Tekan enter untuk kembali..."
+}
+
+
+
 #menu utama
 while true; do
     clear
