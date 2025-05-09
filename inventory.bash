@@ -154,6 +154,34 @@ update_item() {
     read -p "Tekan enter untuk kembali..."
 }
 
+# menghapus item
+delete_item() {
+    clear
+    echo -e "${YELLOW}${HEAD}${NOCOLOR}"
+    echo -e "${BLUE}         Hapus Barang${NOCOLOR}"
+    echo -e "${YELLOW}${HEAD}${NOCOLOR}"
+
+    read -p "Masukkan nama barang yang ingin dihapus: " nama
+
+    # Cek apakah barang ada
+    if ! grep -q "^$nama" "$FOLDER/$FILE"; then
+        echo -e "${RED}Barang tidak ditemukan!${NOCOLOR}"
+        read -p "Tekan enter untuk kembali..."
+        return
+    fi
+
+    # Konfirmasi sebelum menghapus
+    read -p "Apakah Anda yakin ingin menghapus '$nama'? (y/n): " confirm
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        # Filter dan simpan ulang tanpa barang yang dihapus
+        grep -v "^$nama" "$FOLDER/$FILE" > tmpfile && mv tmpfile "$FOLDER/$FILE"
+        echo -e "${GREEN}Barang '$nama' berhasil dihapus.${NOCOLOR}"
+    else
+        echo -e "${YELLOW}Penghapusan dibatalkan.${NOCOLOR}"
+    fi
+
+    read -p "Tekan enter untuk kembali..."
+}
 
 
 #menu utama
