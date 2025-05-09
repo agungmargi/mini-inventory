@@ -19,7 +19,7 @@ https://github.com/agungmargi/project-app-cli-scripting-os-agung_margiyono
 1. Buka terminal
 2. Masuk ke direktori project
 ```bash
-cd mini-inventory
+cd project-app-cli-scripting-os-agung_margiyono
 ```
 3.
 ```bash
